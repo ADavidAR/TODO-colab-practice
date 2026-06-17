@@ -1,0 +1,206 @@
+openapi: 3.1.0
+info:
+  title: APIFiddle Sample Definition
+  version: 0.0.0
+  description: Example workspace
+paths:
+  /api/user:
+    get:
+      tags:
+      - users
+      summary: obtener lista de usuarios
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    type: object
+                    required:
+                    - users
+                    properties:
+                      users:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+          description: The request was successful, and the server has returned the requested resource in the response body.
+      parameters: []
+      operationId: obtenerListaDeUsuarios
+  /api/tasks:
+    get:
+      tags:
+      - tasks
+      summary: Obtener lista de tareas
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    type: object
+                    required:
+                    - tasks
+                    properties:
+                      tasks:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Task'
+          description: The request was successful, and the server has returned the requested resource in the response body.
+      operationId: obtenerListaDeTareas
+    post:
+      tags:
+      - tasks
+      summary: crear tarea
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: The request was successful, and a new resource was created.
+      operationId: crearTarea
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - task
+              properties:
+                task:
+                  $ref: '#/components/schemas/TaskCreate'
+        required: true
+        description: ''
+    delete:
+      tags:
+      - tasks
+      summary: borrar tarea
+      parameters:
+      - in: query
+        name: id
+        style: form
+        schema:
+          type: integer
+        explode: true
+        required: false
+        description: ''
+        allowReserved: false
+      operationId: borrarTarea
+  /api/users:
+    post:
+      tags:
+      - users
+      summary: Crear usuario
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: The request was successful, and a new resource was created.
+      operationId: crearUsuario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - user
+              properties:
+                user:
+                  $ref: '#/components/schemas/UserCreate'
+        required: true
+        description: ''
+    delete:
+      tags:
+      - users
+      summary: borrar usuario
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                type: 'null'
+          description: The request was successful, but there is no content to return in the response.
+      parameters:
+      - in: query
+        name: id
+        style: form
+        schema:
+          type: integer
+        explode: true
+        required: false
+        description: ''
+        allowReserved: false
+      operationId: borrarUsuario
+components:
+  schemas:
+    Task:
+      type: object
+      required:
+      - title
+      - asignedUserId
+      - description
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        asignedUserId:
+          type: number
+      description: tarea
+    User:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      description: usuario
+    TaskCreate:
+      type: object
+      required:
+      - title
+      - asignedUserId
+      - description
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        asignedUserId:
+          type: number
+      description: Data transfer object for creating a new Task.
+      x-fiddle-dto-info:
+        baseSchemaName: Task
+    UserCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+      description: Data transfer object for creating a new User.
+      x-fiddle-dto-info:
+        baseSchemaName: User
+  parameters:
+    id:
+      in: path
+      name: id
+      schema:
+        type: string
+      required: true
+tags:
+- name: tasks
+- name: users
